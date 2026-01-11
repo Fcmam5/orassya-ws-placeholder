@@ -3,33 +3,33 @@ const translations = {
   en: {
     coming_soon: "Coming Soon",
     made_in: "Made with ❤️ in Algeria",
-    registered_trademark: "Orassya® is a registered trademark in Algeria"
+    registered_trademark: "Orassya® is a registered trademark in Algeria",
+    stay_informed: "Stay informed of our latest news",
   },
   ar: {
     coming_soon: "قريباً",
     made_in: "مصنوع بحب في الجزائر",
-    registered_trademark: "أوراسيا® علامة تجارية مسجلة في الجزائر"
+    registered_trademark: "أوراسيا® علامة تجارية مسجلة في الجزائر",
+    stay_informed: "ابقوا على اطلاع على آخر أخبارنا",
   },
   fr: {
     coming_soon: "Bientôt disponible",
     made_in: "Fabriqué avec amour en Algérie",
-    registered_trademark: "Orassya® est une marque déposée en Algérie"
+    registered_trademark: "Orassya® est une marque déposée en Algérie",
+    stay_informed: "Restez informés de nos dernières actualités",
   },
   de: {
     coming_soon: "Demnächst verfügbar",
     made_in: "Mit Liebe in Algerien hergestellt",
-    registered_trademark: "Orassya® ist eine eingetragene Marke in Algerien"
+    registered_trademark: "Orassya® ist eine eingetragene Marke in Algerien",
+    stay_informed: "Bleiben Sie über unsere neuesten Nachrichten informiert",
   },
   tr: {
     coming_soon: "Çok Yakında",
     made_in: "Cezayir'de sevgiyle üretilmiştir",
-    registered_trademark: "Orassya®, Cezayir'de tescilli bir markadır"
+    registered_trademark: "Orassya®, Cezayir'de tescilli bir markadır",
+    stay_informed: "En son haberlerimizden haberdar olun",
   },
-  zgh: {
-    coming_soon: "ⴰⵔ ⵢⴰⴷ ⵉⵍⵍⴰ ⵢⵓⵙⵙⴰⵏ",
-    made_in: "ⵉⵜⵡⴰⵙⵙⵓⵔ ⵙ ⵜⴰⵀⵢⵢⵉ ⴷⵉ ⴷⵣⴰⵢⵔ",
-    registered_trademark: "ⵓⵔⴰⵙⵢⴰ® ⵜⴰⵙⵏⴰⵙⴱⴰⵙⵜ ⵜⵓⵜⵍⴰⵢⵜ ⴷ ⵜⵥⵥⵍⵇⵎⵜ ⴷⵣⴰⵢⵔ"
-  }
 };
 
 // Get language selector element
@@ -39,7 +39,7 @@ const languageSelector = document.getElementById("language-selector");
 function setLanguage(language) {
   // Update the direction of the document based on language
   document.documentElement.lang = language;
-  if (language === "ar" || language === "zgh") {
+  if (language === "ar") {
     document.documentElement.dir = "rtl";
   } else {
     document.documentElement.dir = "ltr";
@@ -69,16 +69,29 @@ languageSelector.addEventListener("change", (e) => {
 function initializeLanguage() {
   const savedLanguage = localStorage.getItem("preferredLanguage");
   const browserLanguage = navigator.language.split("-")[0];
+  const searchParams = window.location.search;
+
+  // pick language from query parameters
+  if (searchParams) {
+    const urlParams = new URLSearchParams(searchParams);
+    const lang = urlParams.get("lang");
+    if (lang && translations[lang]) {
+      setLanguage(lang);
+      return;
+    }
+  }
 
   // Check if the saved language is supported
   if (savedLanguage && translations[savedLanguage]) {
     languageSelector.value = savedLanguage;
     setLanguage(savedLanguage);
+    return;
   }
   // Check if browser language is supported
   else if (translations[browserLanguage]) {
     languageSelector.value = browserLanguage;
     setLanguage(browserLanguage);
+    return;
   }
   // Default to English
   else {
